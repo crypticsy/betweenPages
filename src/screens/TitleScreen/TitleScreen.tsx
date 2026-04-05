@@ -4,11 +4,7 @@ import { motion } from 'framer-motion';
 import { Story } from '../../types/story';
 import { fonts, spacing } from '../../theme';
 
-import bgImg    from '../../assets/home-screen/background.png';
-import booksImg from '../../assets/home-screen/books.png';
-import teddyImg from '../../assets/home-screen/teddy.png';
-import girlImg  from '../../assets/home-screen/girl.png';
-import boyImg   from '../../assets/home-screen/boy.png';
+import bgImg from '../../assets/home-screen/background.png';
 
 const layerStyle: React.CSSProperties = {
   position: 'absolute',
@@ -32,7 +28,6 @@ export default function TitleScreen({ story: _story, onStart }: Props) {
       style={{
         width: '100%',
         height: '100%',
-        background: '#1a1a2e',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -42,12 +37,8 @@ export default function TitleScreen({ story: _story, onStart }: Props) {
         overflow: 'hidden',
       }}
     >
-      {/* Layered illustration — stacked, no movement */}
-      <img src={bgImg}    alt="" style={layerStyle} draggable={false} />
-      <img src={booksImg} alt="" style={layerStyle} draggable={false} />
-      <img src={teddyImg} alt="" style={layerStyle} draggable={false} />
-      <img src={girlImg}  alt="" style={layerStyle} draggable={false} />
-      <img src={boyImg}   alt="" style={layerStyle} draggable={false} />
+      {/* Background illustration */}
+      <img src={bgImg} alt="" style={layerStyle} draggable={false} />
 
       {/* Vignette — fades all edges into the page background */}
       <div style={{
