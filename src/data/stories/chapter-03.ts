@@ -95,7 +95,7 @@ export const chapter03: Chapter = {
       emotion: 'romantic',
       config: {
         imagePairs: [
-          { label: 'First Date — the coffee shop', caption: 'Two hours felt like twenty minutes.' },
+          { label: 'First Date — the coffee shop', caption: 'Two hours felt like twenty minutes.', assetKey: 'ch03_s04' },
         ],
       },
     },

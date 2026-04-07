@@ -4,7 +4,7 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmotion } from '../../systems/EmotionContext';
-import { fonts, radius, shadow, spacing } from '../../theme';
+import { fonts, shadow, spacing } from '../../theme';
 
 interface ImagePair { caption?: string; label: string; assetKey?: string }
 interface Props { imagePairs: ImagePair[]; onComplete: () => void }
