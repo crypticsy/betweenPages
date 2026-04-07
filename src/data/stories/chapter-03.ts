@@ -35,12 +35,12 @@ export const chapter03: Chapter = {
           {
             template: 'I ____ coffee when I\'m ____.',
             answers: ['love', 'nervous'],
-            distractors: ['hate', 'need', 'happy', 'tired'],
+            distractors: ['coffee', 'quickly', 'tomorrow', 'softly'],
           },
           {
             template: 'You make everything feel ____.',
             answers: ['easy'],
-            distractors: ['hard', 'strange', 'quiet', 'lighter'],
+            distractors: ['run', 'softly', 'coffee', 'smile'],
           },
         ],
       },

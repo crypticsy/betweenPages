@@ -34,17 +34,17 @@ export const chapter02: Chapter = {
           {
             template: 'Oh — I didn\'t mean to ____. I\'m just ____ here every day.',
             answers: ['interrupt', 'playing'],
-            distractors: ['stare', 'wander', 'singing', 'sitting', 'rushing', 'walking'],
+            distractors: ['music', 'sorry', 'bright', 'home'],
           },
           {
             template: 'You have such a ____ voice. Does it come ____?',
             answers: ['beautiful', 'naturally'],
-            distractors: ['quiet', 'strange', 'quickly', 'easily', 'soft', 'clear'],
+            distractors: ['sing', 'forget', 'arrive', 'stay'],
           },
           {
             template: 'I\'ve never really ____ to anyone about ____.',
             answers: ['talked', 'music'],
-            distractors: ['listened', 'thought', 'art', 'writing', 'spoken', 'feelings'],
+            distractors: ['slowly', 'bright', 'tired', 'here'],
           },
         ],
       },
