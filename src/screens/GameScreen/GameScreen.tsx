@@ -20,7 +20,7 @@ interface Props { onExit?: () => void }
 export default function GameScreen({ onExit }: Props) {
   const {
     emotion, chapter, scene, isDone, isChapterComplete,
-    story, advanceChapter, completedChapters, completedScenes,
+    story, advanceChapter,
     jumpToChapter, jumpToScene,
   } = useStory();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -158,6 +158,11 @@ export default function GameScreen({ onExit }: Props) {
                 role: 'Screenplay',
                 delay: 1.95,
                 name: <span>ChatGPT {/* ← screenplay credit */}</span>,
+              },
+              {
+                role: 'Art',
+                delay: 2.1,
+                name: <span>Nano Banana 2</span>,
               },
               {
                 role: 'Music',
@@ -328,100 +333,91 @@ export default function GameScreen({ onExit }: Props) {
            />
         )}
 
-        {/* ── Floating chapter/scene navigator ────────────────────────────── */}
-        <div
-          style={{ position: 'absolute', bottom: 16, right: 16, zIndex: 200, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}
-          onClick={e => e.stopPropagation()}
-        >
-          <button
-            onClick={() => { setNavOpen(o => !o); setExpandedChapter(null); }}
-            title="Navigate story"
-            style={{
-              background: `${palette.panelBg}cc`,
-              backdropFilter: 'blur(8px)',
-              border: `1px solid ${palette.accentSoft}`,
-              borderRadius: 8,
-              color: IS_DEV ? '#FFD580' : palette.accentMid,
-              fontFamily: 'monospace',
-              fontSize: 11,
-              padding: '4px 10px',
-              cursor: 'pointer',
-              letterSpacing: '0.08em',
-              boxShadow: `0 2px 12px ${palette.panelShadow}`,
-            }}
+        {/* ── Floating chapter/scene navigator (DEV ONLY) ────────────────── */}
+        {IS_DEV && (
+          <div
+            style={{ position: 'absolute', bottom: 16, right: 16, zIndex: 200, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}
+            onClick={e => e.stopPropagation()}
           >
-            {IS_DEV ? '⚙ DEV' : '☰'}
-          </button>
+            <button
+              onClick={() => { setNavOpen(o => !o); setExpandedChapter(null); }}
+              title="Navigate story"
+              style={{
+                background: `${palette.panelBg}cc`,
+                backdropFilter: 'blur(8px)',
+                border: `1px solid ${palette.accentSoft}`,
+                borderRadius: 8,
+                color: '#FFD580',
+                fontFamily: 'monospace',
+                fontSize: 11,
+                padding: '4px 10px',
+                cursor: 'pointer',
+                letterSpacing: '0.08em',
+                boxShadow: `0 2px 12px ${palette.panelShadow}`,
+              }}
+            >
+              ⚙ DEV
+            </button>
 
-          <AnimatePresence>
-            {navOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                transition={{ duration: 0.18 }}
-                style={{
-                  background: `${palette.panelBg}f0`,
-                  backdropFilter: 'blur(12px)',
-                  border: `1px solid ${palette.accentSoft}`,
-                  borderRadius: 10,
-                  padding: '10px 12px',
-                  display: 'flex', flexDirection: 'column', gap: 5,
-                  minWidth: 200,
-                  boxShadow: `0 4px 24px ${palette.panelShadow}`,
-                }}
-              >
-                <div style={{ fontFamily: 'monospace', fontSize: 10, letterSpacing: '0.15em', color: palette.textSoft, marginBottom: 2 }}>
-                  {IS_DEV ? 'JUMP TO' : 'STORY MAP'}
-                </div>
+            <AnimatePresence>
+              {navOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                  transition={{ duration: 0.18 }}
+                  style={{
+                    background: `${palette.panelBg}f0`,
+                    backdropFilter: 'blur(12px)',
+                    border: `1px solid ${palette.accentSoft}`,
+                    borderRadius: 10,
+                    padding: '10px 12px',
+                    display: 'flex', flexDirection: 'column', gap: 5,
+                    minWidth: 200,
+                    boxShadow: `0 4px 24px ${palette.panelShadow}`,
+                  }}
+                >
+                  <div style={{ fontFamily: 'monospace', fontSize: 10, letterSpacing: '0.15em', color: palette.textSoft, marginBottom: 2 }}>
+                    JUMP TO
+                  </div>
 
-                {story.chapters.map((ch, idx) => {
-                  // A chapter is accessible if DEV, or it's been started/completed
-                  const chReached = IS_DEV
-                    || completedChapters.includes(ch.id)
-                    || chapter?.id === ch.id;
-
-                  return (
+                  {story.chapters.map((ch, idx) => (
                     <div key={ch.id} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                       <div style={{ display: 'flex', gap: 4 }}>
                         <button
-                          disabled={!chReached}
-                          onClick={() => { if (chReached) { jumpToChapter(ch.id); setNavOpen(false); } }}
+                          onClick={() => { jumpToChapter(ch.id); setNavOpen(false); }}
                           style={{
                             flex: 1,
                             background: chapter?.id === ch.id
                               ? `${palette.accentSoft}`
-                              : chReached ? `${palette.panelBg}` : 'transparent',
-                            border: `1px solid ${chReached ? palette.accentMid : palette.accentSoft}`,
+                              : `${palette.panelBg}`,
+                            border: `1px solid ${palette.accentMid}`,
                             borderRadius: 6,
-                            color: chReached ? palette.text : palette.textSoft,
+                            color: palette.text,
                             fontFamily: fonts.sans,
                             fontSize: 11, padding: '5px 8px',
-                            cursor: chReached ? 'pointer' : 'default',
+                            cursor: 'pointer',
                             textAlign: 'left', letterSpacing: '0.04em',
-                            opacity: chReached ? 1 : 0.4,
                           }}
                         >
-                          {!chReached && '🔒 '}{chReached && chapter?.id === ch.id && '▶ '}Ch {idx + 1} — {ch.title}
+                          {chapter?.id === ch.id && '▶ '}Ch {idx + 1} — {ch.title}
                         </button>
-                        {IS_DEV && (
-                          <button
-                            onClick={() => setExpandedChapter(expandedChapter === ch.id ? null : ch.id)}
-                            style={{
-                              background: palette.panelBg,
-                              border: `1px solid ${palette.accentSoft}`,
-                              borderRadius: 6,
-                              color: palette.accentMid, fontFamily: 'monospace',
-                              fontSize: 11, padding: '4px 7px', cursor: 'pointer',
-                            }}
-                          >
-                            {expandedChapter === ch.id ? '▲' : '▼'}
-                          </button>
-                        )}
+                        <button
+                          onClick={() => setExpandedChapter(expandedChapter === ch.id ? null : ch.id)}
+                          style={{
+                            background: palette.panelBg,
+                            border: `1px solid ${palette.accentSoft}`,
+                            borderRadius: 6,
+                            color: palette.accentMid, fontFamily: 'monospace',
+                            fontSize: 11, padding: '4px 7px', cursor: 'pointer',
+                          }}
+                        >
+                          {expandedChapter === ch.id ? '▲' : '▼'}
+                        </button>
                       </div>
 
                       <AnimatePresence>
-                        {IS_DEV && expandedChapter === ch.id && (
+                        {expandedChapter === ch.id && (
                           <motion.div
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
@@ -429,43 +425,35 @@ export default function GameScreen({ onExit }: Props) {
                             transition={{ duration: 0.18 }}
                             style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: 2, paddingLeft: 10 }}
                           >
-                            {ch.scenes.map((sc, sIdx) => {
-                              const scReached = IS_DEV
-                                || completedScenes.includes(sc.id)
-                                || (chapter?.id === ch.id && scene?.id === sc.id);
-
-                              return (
-                                <button
-                                  key={sc.id}
-                                  disabled={!scReached}
-                                  onClick={() => { if (scReached) { jumpToScene(ch.id, sc.id); setNavOpen(false); } }}
-                                  style={{
-                                    background: scene?.id === sc.id ? `${palette.accentSoft}88` : 'transparent',
-                                    border: `1px solid ${scReached ? palette.accentSoft : 'transparent'}`,
-                                    borderRadius: 5,
-                                    color: scReached ? palette.text : palette.textSoft,
-                                    fontFamily: 'monospace', fontSize: 10,
-                                    padding: '3px 8px', cursor: scReached ? 'pointer' : 'default',
-                                    textAlign: 'left', opacity: scReached ? 1 : 0.35,
-                                  }}
-                                >
-                                  {!scReached && '🔒'}
-                                  {scReached && scene?.id === sc.id && '▶ '}
-                                  {scReached && scene?.id !== sc.id && '↳ '}
-                                  S{sIdx + 1} · <span style={{ color: palette.accentMid }}>{sc.type}</span>
-                                </button>
-                              );
-                            })}
+                            {ch.scenes.map((sc, sIdx) => (
+                              <button
+                                key={sc.id}
+                                onClick={() => { jumpToScene(ch.id, sc.id); setNavOpen(false); }}
+                                style={{
+                                  background: scene?.id === sc.id ? `${palette.accentSoft}88` : 'transparent',
+                                  border: `1px solid ${palette.accentSoft}`,
+                                  borderRadius: 5,
+                                  color: palette.text,
+                                  fontFamily: 'monospace', fontSize: 10,
+                                  padding: '3px 8px', cursor: 'pointer',
+                                  textAlign: 'left',
+                                }}
+                              >
+                                {scene?.id === sc.id && '▶ '}
+                                {scene?.id !== sc.id && '↳ '}
+                                S{sIdx + 1} · <span style={{ color: palette.accentMid }}>{sc.type}</span>
+                              </button>
+                            ))}
                           </motion.div>
                         )}
                       </AnimatePresence>
                     </div>
-                  );
-                })}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
         {/* ── End floating navigator ───────────────────────────────────────── */}
 
       </motion.div>

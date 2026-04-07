@@ -1,7 +1,7 @@
 export * from './colors';
 
 export const fonts = {
-  serif: "'Playwrite BE WAL', cursive",       // conversation text
+  serif: "'Gaegu', cursive",                  // conversation text
   sans: "'Bellefair', serif",                  // UI chrome
   handwritten: "'Bellefair', serif",             // story narration / captions
 };

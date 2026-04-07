@@ -21,17 +21,22 @@ interface Props {
 export default function PanelLayout({ scene, containerWidth, containerHeight }: Props) {
   const { panelIndex, advancePanel } = useStory();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const lastPanelRef = useRef<HTMLDivElement>(null);
 
   const panelWidth = Math.min(containerWidth - spacing.xl * 2, MAX_WIDTH);
 
-  // Scroll to bottom when new panel appears
+  // Scroll to the newest panel when it appears
   useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    // Delay so the panel has time to mount and the animation starts
-    setTimeout(() => {
-      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
-    }, 150);
+    // Small delay to ensure the panel has started its mounting/animation cycle
+    const timer = setTimeout(() => {
+      if (lastPanelRef.current) {
+        lastPanelRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+        });
+      }
+    }, 100);
+    return () => clearTimeout(timer);
   }, [panelIndex]);
 
   // Height by layout type
@@ -69,10 +74,11 @@ export default function PanelLayout({ scene, containerWidth, containerHeight }: 
         {visiblePanels.map((panel, idx) => (
           <motion.div
             key={panel.id}
-            initial={idx === panelIndex ? { opacity: 0, y: '28vh' } : false}
+            ref={idx === panelIndex ? lastPanelRef : null}
+            initial={idx === panelIndex ? { opacity: 0, y: 40 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{
-              duration: 0.75,
+              duration: 0.6,
               ease: [0.22, 1, 0.36, 1],
               delay: 0.05,
             }}

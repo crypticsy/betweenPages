@@ -22,9 +22,11 @@ interface Props {
 export default function ComicPanel({ panel, width, height, onTap, delay = 0 }: Props) {
   const { palette: p } = useEmotion();
   const ref = useRef<HTMLDivElement>(null);
-  const charSize = Math.min(width * 0.38, 88);
+  const charSize = Math.min(width * 0.45, height * 0.5);
 
   const panelRadius = 6; // Florence uses small corner rounding — not large
+
+  const hasNarration = panel.content.some(c => c.narration);
 
   return (
     <motion.div
@@ -47,33 +49,41 @@ export default function ComicPanel({ panel, width, height, onTap, delay = 0 }: P
         flexShrink: 0,
       }}
     >
-      {/* Narration — top of panel, italic serif */}
-      {panel.content[0]?.narration && (
-        <p style={{
-          textAlign: 'center',
-          fontFamily: fonts.handwritten,
-          fontSize: 14,
-          fontStyle: 'italic',
-          lineHeight: 1.55,
-          color: p.text,
-          textTransform: 'capitalize',
+      {/* Narration area — top of panel, italic serif */}
+      {hasNarration && (
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 4,
           padding: `${spacing.sm}px ${spacing.md}px ${spacing.xs}px`,
           flexShrink: 0,
           borderBottom: panel.content.some(c => c.type === 'character' || c.type === 'environment')
             ? `1px solid ${p.panelBorder}22`
             : 'none',
         }}>
-          {panel.content[0].narration}
-        </p>
+          {panel.content.filter(c => c.narration).map((c, i) => (
+            <p key={`nar-${c.id || i}`} style={{
+              textAlign: 'center',
+              fontFamily: fonts.handwritten,
+              fontSize: 14,
+              fontStyle: 'italic',
+              lineHeight: 1.5,
+              color: p.text,
+              textTransform: 'capitalize',
+            }}>
+              {c.narration}
+            </p>
+          ))}
+        </div>
       )}
 
       {/* Content area */}
       <div style={{
         flex: 1,
         display: 'flex',
-        alignItems: 'flex-end',
+        alignItems: hasNarration ? 'center' : 'center',
         justifyContent: 'space-around',
-        padding: `0 ${spacing.sm}px ${spacing.md}px`,
+        padding: `${spacing.sm}px ${spacing.sm}px ${spacing.md}px`,
         gap: spacing.xs,
         position: 'relative',
         overflow: 'hidden',

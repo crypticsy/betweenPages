@@ -60,6 +60,27 @@ export const chapter03: Chapter = {
             speaker: 'love_interest',
             expression: 'embarrassed',
           },
+          {
+            template: 'So... how long have you ____ the ____?',
+            answers: ['played', 'guitar'],
+            distractors: ['draw', 'danced', 'stare', 'piano'],
+            speaker: 'protagonist',
+            expression: 'neutral',
+          },
+          {
+            template: 'Since I was ____. It was my ____ favorite instrument.',
+            answers: ['seven', 'mom\'s'],
+            distractors: ['small', 'dad\'s', 'teacher', 'ten'],
+            speaker: 'love_interest',
+            expression: 'happy',
+          },
+          {
+            template: 'That\'s ____. I wish I could ____ something like that.',
+            answers: ['nice', 'learn'],
+            distractors: ['annoying', 'cry', 'shake', 'awful'],
+            speaker: 'protagonist',
+            expression: 'thoughtful',
+          },
         ],
       },
     },
@@ -69,10 +90,17 @@ export const chapter03: Chapter = {
       emotion: 'romantic',
       panels: [
         {
-          id: 'p1', layout: 'full', emotion: 'romantic', tapToContinue: true,
+          id: 'p1_1', layout: 'full', emotion: 'romantic', tapToContinue: true,
           content: [
             { id: 'c1', type: 'character', character: 'protagonist', expression: 'happy', narration: 'The hours slipped by, filled with quiet laughter and shared stories.' },
-            { id: 'c2', type: 'character', character: 'love_interest', expression: 'happy', narration: 'Two hours felt like minutes. They barely noticed the world outside.' },
+            { id: 'c2', type: 'character', character: 'love_interest', expression: 'happy' },
+          ],
+        },
+        {
+          id: 'p1_2', layout: 'full', emotion: 'romantic', tapToContinue: true,
+          content: [
+            { id: 'c1', type: 'character', character: 'protagonist', expression: 'happy' },
+            { id: 'c2', type: 'character', character: 'love_interest', expression: 'happy', narration: 'They barely noticed the world outside.' },
           ],
         },
         {

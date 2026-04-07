@@ -1,6 +1,3 @@
-// ─── Polaroid Game ────────────────────────────────────────────────────────────
-// Click repeatedly to "develop" each Polaroid — grayscale fades to color.
-
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmotion } from '../../systems/EmotionContext';
@@ -19,6 +16,10 @@ export default function PolaroidGame({ imagePairs, onComplete }: Props) {
 
   const progress = taps / TAPS_TO_DEVELOP;
   const developed = progress >= 1;
+
+  // Split progress into two phases: black-to-gray (0-0.4) and gray-to-color (0.4-1.0)
+  const grayOpacity = Math.min(progress / 0.4, 1);
+  const colorOpacity = progress > 0.4 ? Math.min((progress - 0.4) / 0.6, 1) : 0;
 
   const handleTap = useCallback(() => {
     if (developed) {
@@ -51,16 +52,22 @@ export default function PolaroidGame({ imagePairs, onComplete }: Props) {
       {/* Polaroid Container */}
       <motion.div
         onClick={handleTap}
-        animate={shaking ? { x: [0, -5, 5, -3, 3, 0], scale: [1, 1.02, 1] } : { x: 0, scale: 1 }}
-        transition={{ duration: 0.2 }}
-        whileHover={{ scale: developed ? 1.05 : 1 }}
+        animate={shaking ? { 
+          x: [0, -4, 4, -3, 3, 0], 
+          y: [0, 2, -2, 1, -1, 0],
+          rotate: [0, -1, 1, -0.5, 0.5, 0] 
+        } : { x: 0, y: 0, rotate: 0 }}
+        transition={{ duration: 0.25 }}
+        whileHover={{ scale: developed ? 1.05 : 1.02 }}
+        whileTap={{ scale: 0.98 }}
         style={{
-          background: '#FFFFFF',
-          padding: '12px 12px 42px',
-          boxShadow: developed ? '0 12px 40px rgba(0,0,0,0.15)' : shadow.lift,
+          background: '#F9F7F2', // Slightly aged paper color
+          padding: '12px 12px 48px',
+          boxShadow: developed ? '0 15px 45px rgba(0,0,0,0.2)' : '0 8px 24px rgba(0,0,0,0.1)',
           cursor: 'pointer',
-          width: 260,
+          width: 270,
           position: 'relative',
+          border: '1px solid #E6E1D8',
         }}
       >
         {/* Photo area */}
@@ -69,29 +76,16 @@ export default function PolaroidGame({ imagePairs, onComplete }: Props) {
           aspectRatio: '1 / 1',
           overflow: 'hidden',
           position: 'relative',
-          background: '#EBEEF0',
+          background: '#0a0a0a', // Start from black
+          boxShadow: 'inset 0 0 12px rgba(0,0,0,0.5)',
         }}>
           {imageUrl ? (
             <>
-              {/* Grayscale base layer */}
-              <img
-                src={imageUrl}
-                alt={photo.label}
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  filter: 'grayscale(1) brightness(0.8) contrast(1.1)',
-                  opacity: 0.85,
-                }}
-              />
-              {/* Color reveal layer */}
+              {/* Grayscale layer */}
               <motion.img
                 src={imageUrl}
                 alt={photo.label}
-                animate={{ opacity: progress }}
+                animate={{ opacity: grayOpacity }}
                 transition={{ duration: 0.4 }}
                 style={{
                   position: 'absolute',
@@ -99,48 +93,70 @@ export default function PolaroidGame({ imagePairs, onComplete }: Props) {
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                  boxShadow: 'inset 0 0 40px rgba(0,0,0,0.1)'
+                  filter: 'grayscale(1) brightness(0.9) contrast(1.1)',
                 }}
               />
+              {/* Color reveal layer */}
+              <motion.img
+                src={imageUrl}
+                alt={photo.label}
+                animate={{ opacity: colorOpacity }}
+                transition={{ duration: 0.5 }}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+              
+              {/* Development Vignette / Blur */}
+              {!developed && (
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: `radial-gradient(circle, transparent 20%, rgba(0,0,0,${0.5 * (1 - progress)}) 100%)`,
+                  pointerEvents: 'none',
+                }} />
+              )}
             </>
           ) : (
-            <div style={{ position: 'absolute', inset: 0, background: p.panelBorder }} />
+            <div style={{ position: 'absolute', inset: 0, background: '#111' }} />
           )}
 
           {/* Developing grain overlay */}
-          {!developed && (
-             <motion.div
-               animate={{ opacity: [0.3, 0.4, 0.3] }}
-               transition={{ duration: 0.5, repeat: Infinity }}
-               style={{
-                 position: 'absolute', inset: 0, pointerEvents: 'none',
-                 background: 'url("https://grainy-gradients.vercel.app/noise.svg")',
-                 opacity: progress > 0 ? (1 - progress) * 0.5 : 0.5,
-               }}
-             />
-          )}
+          <motion.div
+            animate={{ opacity: developed ? 0 : [0.15, 0.25, 0.15] }}
+            transition={{ duration: 0.8, repeat: developed ? 0 : Infinity }}
+            style={{
+              position: 'absolute', inset: 0, pointerEvents: 'none',
+              background: 'url("https://grainy-gradients.vercel.app/noise.svg")',
+              mixBlendMode: 'overlay',
+            }}
+          />
         </div>
 
-        {/* Caption */}
+        {/* Caption (Handwritten) */}
         <div style={{ 
           position: 'absolute', 
-          bottom: 12, 
+          bottom: 14, 
           left: 0, 
           right: 0, 
           textAlign: 'center', 
-          padding: '0 12px' 
+          padding: '0 18px' 
         }}>
           <AnimatePresence>
             {developed && (
               <motion.p
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, filter: 'blur(4px)' }}
+                animate={{ opacity: 1, filter: 'blur(0px)' }}
                 style={{ 
                   fontFamily: fonts.handwritten, 
-                  fontSize: 16, 
-                  color: p.text, 
+                  fontSize: 18, 
+                  color: '#3d342d', 
                   margin: 0,
-                  textTransform: 'capitalize' 
+                  transform: 'rotate(-1deg)'
                 }}
               >
                 {photo.label}
@@ -150,14 +166,19 @@ export default function PolaroidGame({ imagePairs, onComplete }: Props) {
         </div>
       </motion.div>
 
-      {/* Progress guide dots */}
-      <div style={{ display: 'flex', gap: spacing.sm, marginTop: spacing.lg }}>
+      {/* Progress dots */}
+      <div style={{ display: 'flex', gap: spacing.sm, marginTop: spacing.md }}>
         {imagePairs.map((_, i) => (
-          <div key={i} style={{
-            width: 8, height: 8, borderRadius: '50%',
-            background: i < idx ? p.accent : i === idx ? (developed ? p.accent : p.accentSoft) : p.panelBorder,
-            transition: 'background 0.3s',
-          }} />
+          <motion.div 
+            key={i} 
+            animate={{
+              background: i < idx ? p.accent : i === idx ? (developed ? p.accent : p.accentSoft) : '#D3CEC4',
+              scale: i === idx ? 1.2 : 1,
+            }}
+            style={{
+              width: 8, height: 8, borderRadius: '50%',
+            }} 
+          />
         ))}
       </div>
     </div>
