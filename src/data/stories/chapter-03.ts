@@ -17,11 +17,11 @@ export const chapter03: Chapter = {
       panels: [
         {
           id: 'p1', layout: 'full', emotion: 'romantic', tapToContinue: true,
-          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'coffee_shop', narration: 'He texted. She said yes.' }],
+          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'ch3_s1_p1', narration: 'He texted. She said yes. The coffee shop smelled of cinnamon and warm bread.' }],
         },
         {
           id: 'p2', layout: 'half_h', emotion: 'romantic', tapToContinue: true,
-          content: [{ id: 'c1', type: 'character', character: 'protagonist', expression: 'embarrassed', narration: 'She checked the mirror three times.' }],
+          content: [{ id: 'c2', type: 'environment', backgroundAsset: 'ch3_s1_p2', narration: 'She lifted her cup, letting the warmth seep into her hands, and took a careful sip.' }],
         },
       ],
     },
@@ -33,14 +33,32 @@ export const chapter03: Chapter = {
       config: {
         sentences: [
           {
-            template: 'I ____ coffee when I\'m ____.',
-            answers: ['love', 'nervous'],
-            distractors: ['coffee', 'quickly', 'tomorrow', 'softly'],
+            template: 'I didn\'t even mean to ____ coffee. I just ____ something to do with my hands.',
+            answers: ['get', 'needed'],
+            distractors: ['make', 'found', 'kept', 'left'],
+            speaker: 'protagonist',
+            expression: 'embarrassed',
           },
           {
-            template: 'You make everything feel ____.',
+            template: 'That\'s okay. I\'m ____ the same. I never know what to ____ on first dates.',
+            answers: ['kind of', 'do'],
+            distractors: ['dog', 'smirk', 'laugh', 'pull'],
+            speaker: 'love_interest',
+            expression: 'thoughtful',
+          },
+          {
+            template: 'Really? You don\'t seem ____.',
+            answers: ['nervous'],
+            distractors: ['coffee', 'cute', 'sleepy', 'cityscapper'],
+            speaker: 'protagonist',
+            expression: 'surprised',
+          },
+          {
+            template: 'That\'s just because you make it feel ____.',
             answers: ['easy'],
-            distractors: ['run', 'softly', 'coffee', 'smile'],
+            distractors: ['hard', 'slow', 'strange', 'difficult'],
+            speaker: 'love_interest',
+            expression: 'embarrassed',
           },
         ],
       },
@@ -53,17 +71,21 @@ export const chapter03: Chapter = {
         {
           id: 'p1', layout: 'full', emotion: 'romantic', tapToContinue: true,
           content: [
-            { id: 'c1', type: 'character', character: 'protagonist', expression: 'happy' },
-            { id: 'c2', type: 'character', character: 'love_interest', expression: 'happy', narration: 'Two hours. They barely noticed.' },
+            { id: 'c1', type: 'character', character: 'protagonist', expression: 'happy', narration: 'The hours slipped by, filled with quiet laughter and shared stories.' },
+            { id: 'c2', type: 'character', character: 'love_interest', expression: 'happy', narration: 'Two hours felt like minutes. They barely noticed the world outside.' },
           ],
         },
         {
           id: 'p2', layout: 'half_h', emotion: 'romantic', tapToContinue: true,
-          content: [{ id: 'c1', type: 'character', character: 'love_interest', expression: 'longing', overlayText: 'Same time next week?' }],
+          content: [
+            { id: 'c1', type: 'character', character: 'love_interest', expression: 'longing', overlayText: 'I hope we can do this again soon.' },
+          ],
         },
         {
           id: 'p3', layout: 'half_h', emotion: 'romantic', tapToContinue: true,
-          content: [{ id: 'c1', type: 'character', character: 'protagonist', expression: 'happy', overlayText: 'Yes.' }],
+          content: [
+            { id: 'c1', type: 'character', character: 'protagonist', expression: 'happy', overlayText: 'Yes, I’d like that.' },
+          ],
         },
       ],
     },

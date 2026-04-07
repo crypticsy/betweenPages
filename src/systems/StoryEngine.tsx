@@ -21,12 +21,17 @@ interface Progress {
   emotion: EmotionState;
   completedChapters: string[];
   completedScenes: string[];
+  isChapterComplete: boolean;
+  isDone: boolean;
 }
 
 type Action =
   | { type: 'NEXT_PANEL' }
   | { type: 'NEXT_SCENE' }
   | { type: 'NEXT_CHAPTER' }
+  | { type: 'FINISH_CHAPTER' }
+  | { type: 'FINISH_GAME' }
+  | { type: 'RESET_STORY'; firstChapterId: string; firstSceneId: string; defaultEmotion: EmotionState }
   | { type: 'JUMP'; progress: Partial<Progress> };
 
 function reducer(state: Progress, action: Action): Progress {
@@ -44,9 +49,34 @@ function reducer(state: Progress, action: Action): Progress {
         ...state,
         panelIndex: 0,
         completedChapters: [...state.completedChapters, state.chapterId],
+        isChapterComplete: false,
+      };
+    case 'FINISH_CHAPTER':
+      return { 
+        ...state, 
+        isChapterComplete: true,
+        completedScenes: [...state.completedScenes, state.sceneId]
+      };
+    case 'FINISH_GAME':
+      return {
+        ...state,
+        isDone: true,
+        completedScenes: [...state.completedScenes, state.sceneId],
+        completedChapters: [...state.completedChapters, state.chapterId],
+      };
+    case 'RESET_STORY':
+      return {
+        chapterId: action.firstChapterId,
+        sceneId: action.firstSceneId,
+        panelIndex: 0,
+        emotion: action.defaultEmotion,
+        completedChapters: [],
+        completedScenes: [],
+        isChapterComplete: false,
+        isDone: false,
       };
     case 'JUMP':
-      return { ...state, ...action.progress };
+      return { ...state, ...action.progress, isChapterComplete: false, isDone: false };
     default:
       return state;
   }
@@ -64,10 +94,15 @@ interface EngineCtx {
   isLastScene: boolean;
   isLastChapter: boolean;
   isDone: boolean;
+  isChapterComplete: boolean;
+  completedChapters: string[];
+  completedScenes: string[];
   advancePanel: () => void;
   advanceScene: () => void;
   advanceChapter: () => void;
   jumpToChapter: (id: string) => void;
+  jumpToScene: (chapterId: string, sceneId: string) => void;
+  resetStory: () => void;
 }
 
 const Ctx = createContext<EngineCtx | null>(null);
@@ -91,6 +126,8 @@ export function StoryEngineProvider({
     emotion: firstChapter?.emotion ?? 'neutral',
     completedChapters: [],
     completedScenes: [],
+    isChapterComplete: false,
+    isDone: false,
   });
 
   const chapter = useMemo(
@@ -114,7 +151,6 @@ export function StoryEngineProvider({
   const isLastPanel = progress.panelIndex >= panelCount - 1;
   const isLastScene = sceneIndex >= (chapter?.scenes.length ?? 0) - 1;
   const isLastChapter = chapterIndex >= story.chapters.length - 1;
-  const isDone = isLastChapter && isLastScene && isLastPanel;
 
   const advancePanel = useCallback(() => {
     if (isLastPanel) {
@@ -126,26 +162,18 @@ export function StoryEngineProvider({
   }, [isLastPanel]);
 
   const advanceScene = useCallback(() => {
-    dispatch({ type: 'NEXT_SCENE' });
     if (isLastScene) {
       if (!isLastChapter) {
-        // move to next chapter
-        const nextChapter = story.chapters[chapterIndex + 1];
-        const nextScene = nextChapter?.scenes[0];
-        dispatch({
-          type: 'JUMP',
-          progress: {
-            chapterId: nextChapter?.id ?? '',
-            sceneId: nextScene?.id ?? '',
-            panelIndex: 0,
-            emotion: nextChapter?.emotion ?? progress.emotion,
-            completedChapters: [...progress.completedChapters, progress.chapterId],
-            completedScenes: [...progress.completedScenes, progress.sceneId],
-          },
-        });
+        // Signal that the chapter is complete. GameScreen handles the transition.
+        dispatch({ type: 'FINISH_CHAPTER' });
+      } else {
+        // We've completed the last scene of the final chapter.
+        dispatch({ type: 'FINISH_GAME' });
       }
       return;
     }
+
+    dispatch({ type: 'NEXT_SCENE' });
     const nextScene = chapter?.scenes[sceneIndex + 1];
     if (nextScene) {
       dispatch({
@@ -197,6 +225,36 @@ export function StoryEngineProvider({
     [story.chapters],
   );
 
+  const jumpToScene = useCallback(
+    (chapterId: string, sceneId: string) => {
+      const ch = story.chapters.find(c => c.id === chapterId);
+      if (!ch) return;
+      const sc = ch.scenes.find(s => s.id === sceneId);
+      if (!sc) return;
+      dispatch({
+        type: 'JUMP',
+        progress: {
+          chapterId,
+          sceneId,
+          panelIndex: 0,
+          emotion: sc.emotion ?? ch.emotion,
+        },
+      });
+    },
+    [story.chapters],
+  );
+
+  const resetStory = useCallback(() => {
+    const firstCh = story.chapters[0];
+    const firstSc = firstCh?.scenes[0];
+    dispatch({
+      type: 'RESET_STORY',
+      firstChapterId: firstCh?.id ?? '',
+      firstSceneId: firstSc?.id ?? '',
+      defaultEmotion: firstCh?.emotion ?? 'neutral',
+    });
+  }, [story]);
+
   return (
     <Ctx.Provider
       value={{
@@ -208,11 +266,16 @@ export function StoryEngineProvider({
         isLastPanel,
         isLastScene,
         isLastChapter,
-        isDone,
+        isDone: progress.isDone,
+        isChapterComplete: progress.isChapterComplete,
+        completedChapters: progress.completedChapters,
+        completedScenes: progress.completedScenes,
         advancePanel,
         advanceScene,
         advanceChapter,
         jumpToChapter,
+        jumpToScene,
+        resetStory,
       }}
     >
       {children}

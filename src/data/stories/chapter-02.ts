@@ -16,11 +16,11 @@ export const chapter02: Chapter = {
       panels: [
         {
           id: 'p1', layout: 'full', emotion: 'hopeful', tapToContinue: true,
-          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'park', narration: 'She takes a different route. Just this once.' }],
+          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'ch2_s1_p1', narration: 'She takes a different route. Just this once.' }],
         },
         {
           id: 'p2', layout: 'half_h', emotion: 'hopeful', tapToContinue: true,
-          content: [{ id: 'c1', type: 'abstract', overlayText: '♪  ♩  ♫', narration: 'Music. From somewhere.' }],
+          content: [{ id: 'c2', type: 'environment', backgroundAsset: 'ch2_s1_p2'}],
         },
       ],
     },
@@ -32,19 +32,25 @@ export const chapter02: Chapter = {
       config: {
         sentences: [
           {
-            template: 'Oh — I didn\'t mean to ____. I\'m just ____ here every day.',
-            answers: ['interrupt', 'playing'],
-            distractors: ['music', 'sorry', 'bright', 'home'],
+            template: 'Oh — sorry, I didn\'t mean to ____. I just ____ here sometimes.',
+            answers: ['interrupt', 'play'],
+            distractors: ['listen', 'stay', 'hide', 'wait'],
+            speaker: 'love_interest',
+            expression: 'happy',
           },
           {
-            template: 'You have such a ____ voice. Does it come ____?',
-            answers: ['beautiful', 'naturally'],
-            distractors: ['sing', 'forget', 'arrive', 'stay'],
+            template: 'No, it\'s okay. You sound really ____. Did you ever ____?',
+            answers: ['good', 'train'],
+            distractors: ['quiet', 'stop', 'leave', 'try'],
+            speaker: 'protagonist',
+            expression: 'embarrassed',
           },
           {
-            template: 'I\'ve never really ____ to anyone about ____.',
-            answers: ['talked', 'music'],
-            distractors: ['slowly', 'bright', 'tired', 'here'],
+            template: 'Not really. I don\'t usually ____ where people can ____.',
+            answers: ['play', 'hear'],
+            distractors: ['talk', 'stay', 'voice', 'sleep'],
+            speaker: 'love_interest',
+            expression: 'thoughtful',
           },
         ],
       },
@@ -65,8 +71,8 @@ export const chapter02: Chapter = {
         {
           id: 'p3', layout: 'full', emotion: 'excited', tapToContinue: true,
           content: [
-            { id: 'c1', type: 'character', character: 'protagonist', expression: 'embarrassed' },
-            { id: 'c2', type: 'character', character: 'love_interest', expression: 'laughing', narration: 'For a moment, the grey lifts.' },
+            { id: 'c1', type: 'character', character: 'protagonist', expression: 'embarrassed', narration: 'For a moment, the grey lifts.'  },
+            { id: 'c2', type: 'character', character: 'love_interest', expression: 'laughing', narration: 'He laughs at her embarrassment.' },
           ],
         },
       ],
@@ -77,7 +83,7 @@ export const chapter02: Chapter = {
       emotion: 'excited',
       config: {
         imagePairs: [
-          { label: 'First Meeting — the park', caption: 'The day the colour came back.' },
+          { label: 'First Meeting — the park', caption: 'The day the colour came back.', assetKey: 'ch02_s04' },
         ],
       },
     },

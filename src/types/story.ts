@@ -64,6 +64,8 @@ export interface SentenceChallenge {
   template: string;          // e.g. "My name is ____ and I ____ music."
   answers: string[];         // correct words in blank order
   distractors: string[];     // wrong words shown alongside answers
+  speaker?: string;          // Character ID (e.g., 'protagonist', 'love_interest')
+  expression?: CharacterExpression;
 }
 
 export interface MiniGameConfig {
@@ -72,7 +74,7 @@ export interface MiniGameConfig {
   speakerB?: string;
   cycles?: number;
   pairs?: Array<{ left: string; right: string }>;
-  imagePairs?: Array<{ caption?: string; label: string }>;
+  imagePairs?: Array<{ caption?: string; label: string; assetKey?: string }>;
   sentences?: SentenceChallenge[];
 }
 

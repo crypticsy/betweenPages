@@ -220,7 +220,7 @@ export default function EnvironmentIllustration({ assetKey, width: w, height: h 
 
   const content = scenes[assetKey];
 
-  if (assetKey.startsWith('ch1_')) {
+  if (/^ch\d_/.test(assetKey)) {
     const imageUrl = new URL(`../../assets/chapters/${assetKey}.png`, import.meta.url).href;
     return (
       <img

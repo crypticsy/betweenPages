@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEmotion } from '../../systems/EmotionContext';
 import { fonts, spacing } from '../../theme';
 import { SentenceChallenge } from '../../types/story';
+import CharacterSprite from '../../components/Character/CharacterSprite';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -102,6 +103,15 @@ export default function ConversationPuzzle({ sentences = defaultSentences, onCom
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           style={{ width: '100%', maxWidth: 380, padding: `0 ${spacing.lg}px`, display: 'flex', flexDirection: 'column', gap: spacing.xl }}
         >
+          {sentence.speaker && (
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: spacing.sm }}>
+              <CharacterSprite
+                characterId={sentence.speaker}
+                expression={sentence.expression ?? 'neutral'}
+                size={80}
+              />
+            </div>
+          )}
           <SentenceFill
             sentence={sentence}
             palette={p}
