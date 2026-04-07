@@ -2,18 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Story } from '../../types/story';
-import { fonts, spacing } from '../../theme';
-
 import bgImg from '../../assets/home-screen/background.png';
-
-const layerStyle: React.CSSProperties = {
-  position: 'absolute',
-  inset: 0,
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
-  objectPosition: 'center bottom',
-};
 
 interface Props { story: Story; onStart: () => void }
 
@@ -24,65 +13,40 @@ export default function TitleScreen({ story: _story, onStart }: Props) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        cursor: 'pointer',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      className="relative w-full h-full flex flex-col items-center cursor-pointer overflow-hidden"
     >
       {/* Background illustration */}
-      <img src={bgImg} alt="" style={layerStyle} draggable={false} />
+      <img
+        src={bgImg}
+        alt=""
+        draggable={false}
+        className="absolute inset-0 w-full h-full object-cover object-bottom"
+      />
 
-      {/* Vignette — fades all edges into the page background */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: `radial-gradient(ellipse at center, transparent 40%, #1a1a2e 100%)`,
-        pointerEvents: 'none',
-      }} />
+      {/* Vignette — fades all edges to dark */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse at center, transparent 40%, #1a1a2e 100%)' }}
+      />
 
-      {/* Text glow — anchored to the screen, wider than viewport so gradient never hits a wall */}
-      <div style={{
-        position: 'absolute',
-        bottom: 0,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: '200%',
-        height: '55%',
-        background: 'radial-gradient(ellipse at center bottom, rgba(0,0,0,0.6) 0%, transparent 65%)',
-        pointerEvents: 'none',
-        zIndex: 1,
-      }} />
+      {/* Bottom glow — darkens area behind text */}
+      <div
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[200%] h-[60%] pointer-events-none z-10"
+        style={{ background: 'radial-gradient(ellipse at center bottom, rgba(0,0,0,0.8) 0%, transparent 65%)' }}
+      />
 
-      {/* Text block — white, sits at the bottom */}
-      <div style={{
-        position: 'relative',
-        zIndex: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        paddingBottom: spacing.xxl,
-        gap: spacing.sm,
-      }}>
+      {/* Spacer — pushes text block to the bottom */}
+      <div className="flex-1" />
+
+      {/* Text block */}
+      <div className="relative z-20 flex flex-col items-center gap-3" style={{paddingBottom:"100px"}}>
+
         <motion.h1
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
-          style={{
-            fontFamily: "'Barrio', cursive",
-            fontSize: 'clamp(36px, 10vw, 56px)',
-            letterSpacing: '0.06em',
-            color: '#ffffff',
-            margin: 0,
-            textAlign: 'center',
-            textTransform: 'capitalize',
-          }}
+          className="text-[clamp(36px,9vw,52px)] tracking-[0.06em] text-white text-center capitalize m-0 leading-none"
+          style={{ fontFamily: "'Barrio', cursive", textShadow: '0 3px 24px rgba(0,0,0,0.7)' }}
         >
           Between Pages
         </motion.h1>
@@ -91,34 +55,22 @@ export default function TitleScreen({ story: _story, onStart }: Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 0.7 }}
-          style={{
-            fontFamily: fonts.sans,
-            fontSize: 17,
-            fontStyle: 'italic',
-            color: 'rgba(255,255,255,0.9)',
-            letterSpacing: '0.06em',
-            margin: 0,
-            textTransform: 'capitalize',
-          }}
+          className="text-lg italic text-white/95 tracking-[0.08em] m-0 capitalize"
+          style={{ fontFamily: "'Bellefair', serif", textShadow: '0 2px 14px rgba(0,0,0,0.65)', paddingBottom: '30px' }}
         >
-          a story in chapters
+          - a story in chapters -
         </motion.p>
 
         <motion.p
           initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 0.6, 0] }}
+          animate={{ opacity: [0, 0.9, 0] }}
           transition={{ delay: 1.8, duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-          style={{
-            fontFamily: fonts.sans,
-            fontSize: 11,
-            color: 'rgba(255,255,255,0.55)',
-            letterSpacing: '0.18em',
-            margin: 0,
-            marginTop: spacing.sm,
-          }}
+          className="text-sm text-white/90 tracking-[0.16em] m-0 mt-2 uppercase"
+          style={{ fontFamily: "'Bellefair', serif", textShadow: '0 1px 12px rgba(0,0,0,0.8)' }}
         >
           Tap anywhere to begin
         </motion.p>
+
       </div>
     </motion.div>
   );
