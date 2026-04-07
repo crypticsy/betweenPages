@@ -69,6 +69,7 @@ export default function GameScreen({ onExit }: Props) {
     <EmotionProvider emotion={emotion}>
       <motion.div
         ref={containerRef}
+        initial={{ background: palette.pageBg }}
         animate={{ background: palette.pageBg }}
         transition={{ duration: 0.7, ease: 'easeInOut' }}
         style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
