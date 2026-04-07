@@ -80,12 +80,29 @@ export default function ComicPanel({ panel, width, height, onTap, delay = 0 }: P
       }}>
         {/* Environment — fills behind everything */}
         {panel.content.filter(c => c.type === 'environment').map(c => (
-          <div key={c.id} style={{ position: 'absolute', inset: 0 }}>
-            <EnvironmentIllustration
-              assetKey={c.backgroundAsset ?? 'abstract_memory'}
-              width={width}
-              height={height}
-            />
+          <div key={c.id} style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {c.overlayText ? (
+              <>
+                <div style={{ zIndex: 10, paddingTop: spacing.md, flexShrink: 0 }}>
+                  <SpeechBubble text={c.overlayText} tail="bottom-center" delay={0.2} />
+                </div>
+                <div style={{ flex: 1, width: '100%', minHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <EnvironmentIllustration
+                    assetKey={c.backgroundAsset ?? 'abstract_memory'}
+                    width={width}
+                    height={height}
+                  />
+                </div>
+              </>
+            ) : (
+              <div style={{ position: 'absolute', inset: 0 }}>
+                <EnvironmentIllustration
+                  assetKey={c.backgroundAsset ?? 'abstract_memory'}
+                  width={width}
+                  height={height}
+                />
+              </div>
+            )}
           </div>
         ))}
 
@@ -146,17 +163,19 @@ export default function ComicPanel({ panel, width, height, onTap, delay = 0 }: P
 
       {/* Tap-to-continue hint */}
       {panel.tapToContinue && (
-        <p style={{
+        <p  
+          style={{
           textAlign: 'center',
           fontFamily: fonts.sans,
           fontSize: 10,
           letterSpacing: '0.08em',
-          color: p.textSoft,
-          opacity: 0.35,
-          paddingBottom: spacing.xs,
+          opacity: 0.65,
           flexShrink: 0,
+          color: p.text,
+          paddingTop: spacing.xs,
+          paddingBottom: spacing.xs,
         }}>
-          tap to continue
+          Tap to Continue
         </p>
       )}
     </motion.div>

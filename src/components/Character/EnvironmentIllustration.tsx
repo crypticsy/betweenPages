@@ -218,7 +218,26 @@ export default function EnvironmentIllustration({ assetKey, width: w, height: h 
     ),
   };
 
-  const content = scenes[assetKey] ?? scenes.abstract_memory;
+  const content = scenes[assetKey];
+
+  if (assetKey.startsWith('ch1_')) {
+    const imageUrl = new URL(`../../assets/chapters/${assetKey}.png`, import.meta.url).href;
+    return (
+      <img
+        src={imageUrl}
+        alt={assetKey}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          display: 'block',
+          borderRadius: 'inherit'
+        }}
+      />
+    );
+  }
+
+  const svgContent = content ?? scenes.abstract_memory;
 
   return (
     <svg
@@ -227,7 +246,7 @@ export default function EnvironmentIllustration({ assetKey, width: w, height: h 
       viewBox={`0 0 ${w} ${h}`}
       style={{ display: 'block', borderRadius: 'inherit' }}
     >
-      {content}
+      {svgContent}
     </svg>
   );
 }

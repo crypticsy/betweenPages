@@ -17,15 +17,15 @@ export const chapter01: Chapter = {
       panels: [
         {
           id: 'p1', layout: 'full', emotion: 'neutral', tapToContinue: true,
-          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'bedroom', narration: 'Monday. Again.' }],
+          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'ch1_s1_p1', narration: 'Monday. Again.' }],
         },
         {
           id: 'p2', layout: 'half_h', emotion: 'neutral', tapToContinue: true,
-          content: [{ id: 'c1', type: 'character', character: 'protagonist', expression: 'sad', narration: '6:45 AM.' }],
+          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'ch1_s1_p2', narration: '6:45 AM.' }],
         },
         {
           id: 'p3', layout: 'half_h', emotion: 'neutral', tapToContinue: true,
-          content: [{ id: 'c1', type: 'character', character: 'protagonist', expression: 'neutral', overlayText: '…five more minutes.' }],
+          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'ch1_s1_p3', overlayText: '…five more minutes.' }],
         },
       ],
     },
@@ -42,11 +42,11 @@ export const chapter01: Chapter = {
       panels: [
         {
           id: 'p1', layout: 'full', emotion: 'neutral', tapToContinue: true,
-          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'city_street', narration: 'Same streets. Same faces.' }],
+          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'ch1_s3_p1', narration: 'Same streets. Same faces.' }],
         },
         {
           id: 'p2', layout: 'half_h', emotion: 'neutral', tapToContinue: true,
-          content: [{ id: 'c1', type: 'character', character: 'protagonist', expression: 'thoughtful', narration: 'She wonders if anyone else feels invisible.' }],
+          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'ch1_s3_p2', narration: 'She wonders if anyone else feels invisible.' }],
         },
       ],
     },
@@ -69,15 +69,15 @@ export const chapter01: Chapter = {
       panels: [
         {
           id: 'p1', layout: 'featured_top', emotion: 'neutral', tapToContinue: true,
-          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'apartment', narration: 'Home. Finally.' }],
+          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'ch1_s4_p1', narration: 'Home. Finally.' }],
         },
         {
           id: 'p2', layout: 'half_h', emotion: 'neutral', tapToContinue: true,
-          content: [{ id: 'c1', type: 'character', character: 'protagonist', expression: 'sad', narration: 'She eats alone. The TV murmurs.' }],
+          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'ch1_s4_p2', narration: 'She eats alone. The TV murmurs.' }],
         },
         {
           id: 'p3', layout: 'half_h', emotion: 'neutral', tapToContinue: true,
-          content: [{ id: 'c1', type: 'abstract', overlayText: 'Tomorrow will be the same.' }],
+          content: [{ id: 'c1', type: 'environment', backgroundAsset: 'ch1_s4_p3'}],
         },
       ],
     },
